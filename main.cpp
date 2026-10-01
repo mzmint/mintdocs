@@ -22,16 +22,19 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     QWidget window;
-    window.setWindowTitle("MintCalc");
+    window.setWindowTitle("MintDocs");
     window.resize(1920, 1080);
     window.show();
+
+    QLineEdit fname;
+    fname.setPlaceholderText("file.txt");
 
     QTextEdit maint;
 
     QPushButton save;
     save.setText("Save");
     QObject::connect(&save, &QPushButton::clicked, [&]() {
-        QFile file("file.txt");
+        QFile file(fname.text());
 
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&file);
@@ -41,8 +44,9 @@ int main(int argc, char *argv[]) {
     });
 
     QGridLayout layout;
-    layout.addWidget(&maint, 0, 0);
-    layout.addWidget(&save, 1, 0);
+    layout.addWidget(&fname, 0, 0);
+    layout.addWidget(&maint, 1, 0);
+    layout.addWidget(&save, 2, 0);
     window.setLayout(&layout);
     return app.exec();
 }
