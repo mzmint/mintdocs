@@ -37,16 +37,32 @@ int main(int argc, char *argv[]) {
         QFile file(fname.text());
 
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        out << maint.toPlainText();
-        file.close();
-    }
+            QTextStream out(&file);
+            out << maint.toPlainText();
+            file.close();
+        }
     });
+
+    QLineEdit fsz;
+    fsz.setPlaceholderText("12px");
 
     QGridLayout layout;
     layout.addWidget(&fname, 0, 0);
-    layout.addWidget(&maint, 1, 0);
-    layout.addWidget(&save, 2, 0);
+    layout.addWidget(&fsz, 0, 1);
+    layout.addWidget(&maint, 1, 0, 1, 2);
+    layout.addWidget(&save, 2, 0, 1, 2);
     window.setLayout(&layout);
+
+    QObject::connect(&fsz, &QLineEdit::textChanged, [&]() {
+        maint.setStyleSheet(
+            QString(
+                "QTextEdit {"
+                "    font-size: %1;"
+                "}"
+            ).arg(fsz.text())
+        );
+    });
+
+
     return app.exec();
 }
